@@ -54,6 +54,7 @@ public class FileSelector extends AbstractInputComponent implements AutowireInte
         openFolderBtn.setOnMouseClicked(this);
         
         this.setConfigType(configType);
+        this.setLabel(label);
     }
 
     public boolean isFolder() {

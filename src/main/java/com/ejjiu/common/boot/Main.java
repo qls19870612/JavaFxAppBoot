@@ -13,6 +13,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.boot.SpringApplication;
 import org.springframework.context.ConfigurableApplicationContext;
 
+import java.io.File;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -85,12 +86,15 @@ public class Main extends Application {
 
         String baseUrl = "icons/";
 
-
-        Image image = getImage(classLoader, baseUrl, "processor_16x16.png");
-        return Arrays.asList(image, getImage(classLoader, baseUrl, "processor_24x24.png"), getImage(classLoader, baseUrl, "processor_36x36.png"),
-                getImage(classLoader, baseUrl, "processor_42x42.png"), getImage(classLoader, baseUrl, "processor_64x64.png"));
+        Image image = getImage(classLoader, baseUrl, getIconName( "16x16.png"));
+        return Arrays.asList(image, getImage(classLoader, baseUrl, getIconName("24x24.png")), getImage(classLoader, baseUrl, getIconName("36x36.png")),
+                getImage(classLoader, baseUrl, getIconName("42x42.png")), getImage(classLoader, baseUrl, getIconName("64x64.png")));
     }
-
+    
+    protected String getIconName(String name) {
+        return "icon_" + name;
+    }
+    
     private Image getImage(ClassLoader classLoader, String baseUrl, String s) {
         URL resource = classLoader.getResource(baseUrl + s);
         return new Image(resource.toExternalForm());
@@ -174,6 +178,10 @@ public class Main extends Application {
     @Override
     public void start(Stage primaryStage) {
 //        checkDbFolder();
+        File file = new File("config");
+        if (!file.exists()) {
+            file.mkdirs();
+        }
         this.primaryStage = primaryStage;
         final Stage splashStage = new Stage(StageStyle.TRANSPARENT);
 
