@@ -270,7 +270,16 @@ public class StringUtils {
     }
     
     public static <T> String joinList(List<T> s, String split) {
-        return joinList(s, 0, split);
+     
+        StringBuilder stringBuilder = new StringBuilder();
+        for (T t : s) {
+            stringBuilder.append(t).append(split);
+        }
+        if (stringBuilder.length() > 0) {
+            stringBuilder.setLength(stringBuilder.length() - split.length());
+        }
+        return stringBuilder.toString();
+       
     }
     
     public static <T> String joinList(List<T> s, int startIndex, String split) {
