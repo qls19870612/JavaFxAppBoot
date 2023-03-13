@@ -348,7 +348,7 @@ public class FileOperator {
         return ret;
     }
 
-    private static void readToList(File root, ArrayList<File> ret, String extName) {
+    public static void readToList(File root, ArrayList<File> ret, String extName) {
         if (root.isDirectory()) {
             File[] subFiles = root.listFiles();
             if (subFiles != null) {
@@ -363,7 +363,7 @@ public class FileOperator {
         }
     }
 
-    private static void readToList(File root, ArrayList<File> ret, Filter<File> filter, Filter<File> dirFilter) {
+    public static void readToList(File root, ArrayList<File> ret, Filter<File> filter, Filter<File> dirFilter) {
         if (root.isDirectory()) {
             if (dirFilter != null) {
                 if (!dirFilter.accept(root)) {
