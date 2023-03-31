@@ -3,6 +3,7 @@ package com.ejjiu.common.componet.fxml;
 import com.ejjiu.common.enums.ConfigType;
 import com.ejjiu.common.interfaces.AutowireInterface;
 import com.ejjiu.common.jpa.ConfigRepository;
+import com.ejjiu.common.jpa.table.Config;
 
 import org.springframework.beans.factory.annotation.Autowired;
 
@@ -36,7 +37,19 @@ public class ComboboxComponent<T> extends ComboBox<T> implements AutowireInterfa
         this.getSelectionModel().select(config);
 
     }
-
+    @FXML
+    public void initConfigIfNoValue(ConfigType configType) {
+        this.configType = configType;
+        if (configRepository == null) {
+            return;
+        }
+        final Config config = configRepository.findByKey(configType.name());
+        
+        if (config!=null) {
+            int conf = configRepository.getInt(configType);
+            this.getSelectionModel().select(conf);
+        }
+    }
     @FXML
     public ConfigType getConfigType() {
         return this.configType;
@@ -44,6 +57,9 @@ public class ComboboxComponent<T> extends ComboBox<T> implements AutowireInterfa
 
     @Override
     public void changed(ObservableValue<? extends Number> observable, Number oldValue, Number newValue) {
+        if (configRepository == null || configType == null) {
+            return;
+        }
         configRepository.setInt(configType,newValue.intValue());
     }
 }

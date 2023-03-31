@@ -147,7 +147,7 @@ public class FileOperator {
                 stringBuilder.append(s1);
             }
         } catch (Exception e) {
-            logger.error("getResourceAsText url:{}", url);
+            logger.error("not found file =========== getResourceAsText url:{}", url);
         }
 
         return stringBuilder.toString();
@@ -239,7 +239,7 @@ public class FileOperator {
             }
             if (file.exists()) {
                 byte[] data = Files.readAllBytes(Paths.get(file.getAbsolutePath()));
-                result = new String(data, code);
+                result = new String(data, StandardCharsets.UTF_8);
             } else {
                 return readFiles(file, code);
             }

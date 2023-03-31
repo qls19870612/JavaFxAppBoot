@@ -38,6 +38,9 @@ public abstract class AbstractInputComponent extends HBox implements ChangeListe
         this.labelWidth = labelWidth;
         label.setMinWidth(labelWidth);
         label.setMaxWidth(labelWidth);
+        if (labelWidth <= 0) {
+            this.getChildren().remove(label);
+        }
     }
     public int getInputWidth() {
         return inputWidth;

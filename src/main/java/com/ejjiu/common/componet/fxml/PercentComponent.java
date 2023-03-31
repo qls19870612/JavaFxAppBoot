@@ -3,6 +3,7 @@ package com.ejjiu.common.componet.fxml;
 import com.ejjiu.common.enums.ConfigType;
 import com.ejjiu.common.interfaces.AutowireInterface;
 import com.ejjiu.common.jpa.ConfigRepository;
+import com.ejjiu.common.jpa.table.Config;
 import com.ejjiu.common.utils.IconUtils;
 import com.ejjiu.common.utils.StringUtils;
 import com.ejjiu.common.utils.Utils;
@@ -66,7 +67,21 @@ public class PercentComponent extends Pane implements AutowireInterface {
         }
         
     }
-    
+    @FXML
+    public void initConfigIfNoValue(ConfigType configType) {
+        this.configType = configType;
+        if (configRepository == null) {
+            return;
+        }
+        final Config conf = configRepository.findByKey(configType.name());
+        
+        if (conf!=null) {
+            int config = configRepository.getInt(conf);
+            double percent = config /(double) scale;
+            this.slider.setValue(percent);
+            this.percentTF.setText(config + "");
+        }
+    }
     @FXML
     public ConfigType getConfigType() {
         return this.configType;

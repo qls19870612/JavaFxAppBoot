@@ -3,6 +3,7 @@ package com.ejjiu.common.componet.fxml;
 import com.ejjiu.common.enums.ConfigType;
 import com.ejjiu.common.interfaces.AutowireInterface;
 import com.ejjiu.common.jpa.ConfigRepository;
+import com.ejjiu.common.jpa.table.Config;
 
 import org.springframework.beans.factory.annotation.Autowired;
 
@@ -38,7 +39,19 @@ public class ChoiceBoxComponent<T> extends ChoiceBox<T> implements AutowireInter
         this.getSelectionModel().select(config);
         
     }
-    
+    @FXML
+    public void initConfigIfNoValue(ConfigType configType) {
+        this.configType = configType;
+        if (configRepository == null) {
+            return;
+        }
+        final Config config = configRepository.findByKey(configType.name());
+        
+        if (config!=null) {
+            int conf = configRepository.getInt(config);
+            this.getSelectionModel().select(conf);
+        }
+    }
     @FXML
     public ConfigType getConfigType() {
         return this.configType;

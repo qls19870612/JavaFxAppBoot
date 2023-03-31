@@ -3,6 +3,7 @@ package com.ejjiu.common.componet.fxml;
 import com.ejjiu.common.enums.ConfigType;
 import com.ejjiu.common.interfaces.AutowireInterface;
 import com.ejjiu.common.jpa.ConfigRepository;
+import com.ejjiu.common.jpa.table.Config;
 
 import org.springframework.beans.factory.annotation.Autowired;
 
@@ -28,7 +29,19 @@ public class CheckBoxComponent extends CheckBox implements AutowireInterface, Ch
         this.initialize(null,null);
         
     }
-    
+    @FXML
+    public void initConfigIfNoValue(ConfigType configType) {
+        this.configType = configType;
+        if (configRepository == null) {
+            return;
+        }
+        final Config config = configRepository.findByKey(configType.name());
+        
+        if (config!=null) {
+            int conf = configRepository.getInt(config);
+            setSelected(conf == 1);
+        }
+    }
     @FXML
     public void setConfigType(ConfigType configType) {
         this.configType = configType;
@@ -51,7 +64,7 @@ public class CheckBoxComponent extends CheckBox implements AutowireInterface, Ch
     
     @Override
     public void changed(ObservableValue<? extends Boolean> observable, Boolean oldValue, Boolean newValue) {
-        if (configRepository == null) {
+        if (configRepository == null || configType == null) {
             return;
         }
         configRepository.setInt(configType, newValue ? 1 : 0);

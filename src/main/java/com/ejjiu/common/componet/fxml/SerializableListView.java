@@ -111,6 +111,9 @@ public class SerializableListView<T extends ISerializable> extends ListView<T>  
 
     public void save()
     {
+        if (configRepository == null || configType == null) {
+            return;
+        }
        List<String> list = Lists.newArrayList();
         for (T item : getItems()) {
             String encode = item.encode();

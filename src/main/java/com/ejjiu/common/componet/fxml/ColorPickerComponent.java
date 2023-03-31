@@ -3,6 +3,7 @@ package com.ejjiu.common.componet.fxml;
 import com.ejjiu.common.enums.ConfigType;
 import com.ejjiu.common.interfaces.AutowireInterface;
 import com.ejjiu.common.jpa.ConfigRepository;
+import com.ejjiu.common.jpa.table.Config;
 import com.ejjiu.common.utils.StringUtils;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -39,7 +40,19 @@ public class ColorPickerComponent extends ColorPicker  implements AutowireInterf
         
         setSelectedWithSave(config);
     }
-    
+    @FXML
+    public void initConfigIfNoValue(ConfigType configType) {
+        this.configType = configType;
+        if (configRepository == null) {
+            return;
+        }
+        final Config config = configRepository.findByKey(configType.name());
+        
+        if (config!=null) {
+            String conf = configRepository.getConfig(config);
+            setSelectedWithSave(conf);
+        }
+    }
     public final void setSelectedWithSave(String hexValue) {
         if (StringUtils.isEmpty(hexValue)) {
             return;
@@ -56,6 +69,9 @@ public class ColorPickerComponent extends ColorPicker  implements AutowireInterf
  
     @Override
     public void changed(ObservableValue<? extends Color> observable, Color oldValue, Color newValue) {
+        if (configRepository == null || configType == null) {
+            return;
+        }
         configRepository.setConfig(configType,newValue.toString());
     }
 }

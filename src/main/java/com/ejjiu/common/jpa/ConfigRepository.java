@@ -48,7 +48,14 @@ public interface ConfigRepository extends JpaRepository<Config, String> {
         }
         return config;
     }
-    
+    default String getConfig(Config config) {
+        //        logger.debug("getConfig key:{}", key);
+       
+        if (config == null) {
+            return "";
+        }
+        return config.getValue();
+    }
     default int setConfig(String key, String value) {
         Config config = new Config();
         config.setKey(key);
@@ -73,7 +80,18 @@ public interface ConfigRepository extends JpaRepository<Config, String> {
         String config = getConfig(type);
         return Utils.safeParseInt(config, defaultValue);
     }
-    
+    default int getInt(Config config)
+    {
+        String value;
+        if (config != null) {
+            value = config.getValue();
+        }
+        else
+        {
+            value = "";
+        }
+        return Utils.safeParseInt(value, 0);
+    }
     default int setInt(ConfigType key, int value) {
         return setConfig(key, String.valueOf(value));
     }

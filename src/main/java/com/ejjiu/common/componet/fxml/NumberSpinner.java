@@ -9,6 +9,7 @@ package com.ejjiu.common.componet.fxml;
 import com.ejjiu.common.enums.ConfigType;
 import com.ejjiu.common.interfaces.AutowireInterface;
 import com.ejjiu.common.jpa.ConfigRepository;
+import com.ejjiu.common.jpa.table.Config;
 import com.ejjiu.common.utils.StringUtils;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -309,7 +310,22 @@ public class NumberSpinner extends HBox implements AutowireInterface, ChangeList
         
     }
     
-    
+    @FXML
+    public void initConfigIfNoValue(ConfigType configType) {
+        this.configType = configType;
+        if (configRepository == null) {
+            return;
+        }
+        final Config conf = configRepository.findByKey(configType.name());
+        
+        if (conf!=null) {
+            String config = configRepository.getConfig(conf);
+            if (StringUtils.isEmpty(config)) {
+                return;
+            }
+            this.numberField.setNumber(config);
+        }
+    }
     @FXML
     public ConfigType getConfigType() {
         return this.configType;
@@ -317,7 +333,7 @@ public class NumberSpinner extends HBox implements AutowireInterface, ChangeList
     
     @Override
     public void changed(ObservableValue<? extends String> observable, String oldValue, String newValue) {
-        if (configRepository == null) {
+        if (configRepository == null || configType == null) {
             return;
         }
         configRepository.setConfig(configType, newValue);

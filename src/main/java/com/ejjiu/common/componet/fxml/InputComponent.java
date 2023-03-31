@@ -3,6 +3,7 @@ package com.ejjiu.common.componet.fxml;
 import com.ejjiu.common.enums.ConfigType;
 import com.ejjiu.common.interfaces.AutowireInterface;
 import com.ejjiu.common.jpa.ConfigRepository;
+import com.ejjiu.common.jpa.table.Config;
 import com.ejjiu.common.utils.StringUtils;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -36,7 +37,21 @@ public class InputComponent extends AbstractInputComponent implements AutowireIn
         button.setText("清除");
         textField.setPromptText("");
     }
-
+    @FXML
+    public void initConfigIfNoValue(ConfigType configType) {
+        this.configType = configType;
+        if (configRepository == null) {
+            return;
+        }
+        final Config config = configRepository.findByKey(configType.name());
+        
+        if (config!=null) {
+            String conf = configRepository.getConfig(configType);
+            if (StringUtils.isNotEmpty(conf)) {
+                textField.setText(conf);
+            }
+        }
+    }
     @FXML
     public ConfigType getConfigType() {
         return this.configType;
@@ -72,7 +87,7 @@ public class InputComponent extends AbstractInputComponent implements AutowireIn
 
     @Override
     protected void onTextChange(String oldValue, String newValue) {
-        if (configRepository == null) {
+        if (configRepository == null || configType == null) {
             return;
         }
         configRepository.setConfig(configType.name(), newValue);

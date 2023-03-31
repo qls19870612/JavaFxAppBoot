@@ -2,6 +2,7 @@ package com.ejjiu.common.startLoader;
 
 import org.springframework.core.env.Environment;
 
+import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.function.Consumer;
@@ -61,9 +62,13 @@ public class PropertyReaderHelper {
      * @param function
      *            the function
      */
+    @SuppressWarnings("unchecked")
     public static <T> void setIfPresent(final Environment env, final String key, final Class<T> type, final Consumer<T> function) {
-        final T value = env.getProperty(key, type);
+        T value = env.getProperty(key, type);
         if (value != null) {
+            if (value instanceof String) {
+                value = (T) new String(((String) value).getBytes(StandardCharsets.ISO_8859_1), StandardCharsets.UTF_8);
+            }
             function.accept(value);
         }
     }

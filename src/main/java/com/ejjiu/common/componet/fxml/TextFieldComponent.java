@@ -75,7 +75,7 @@ public class TextFieldComponent extends TextField implements AutowireInterface, 
     
     @Override
     public void changed(ObservableValue<? extends String> observable, String oldValue, String newValue) {
-        if (configRepository == null) {
+        if (configRepository == null || configType == null) {
             return;
         }
         
