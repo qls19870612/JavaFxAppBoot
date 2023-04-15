@@ -10,6 +10,8 @@ import com.ejjiu.common.interfaces.ISerializable;
 import com.ejjiu.common.jpa.ConfigRepository;
 import com.ejjiu.common.utils.StringUtils;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import java.util.List;
@@ -26,7 +28,7 @@ import javafx.scene.control.ListView;
  */
 @SuppressWarnings("unchecked")
 public class SerializableListView<T extends ISerializable> extends ListView<T>  implements AutowireInterface {
- 
+    private static final Logger logger = LoggerFactory.getLogger(SerializableListView.class);
     @Autowired
     private ConfigRepository configRepository;
     private ConfigType configType;
@@ -104,7 +106,7 @@ public class SerializableListView<T extends ISerializable> extends ListView<T>  
         }
         catch (Exception e)
         {
-
+            logger.error("createT e:{}", e);
         }
         return null;
     }
@@ -114,11 +116,16 @@ public class SerializableListView<T extends ISerializable> extends ListView<T>  
         if (configRepository == null || configType == null) {
             return;
         }
-       List<String> list = Lists.newArrayList();
+       
+        configRepository.setConfig(configType, getJSONStringListData());
+    }
+    public String getJSONStringListData()
+    {
+        List<String> list = Lists.newArrayList();
         for (T item : getItems()) {
             String encode = item.encode();
             list.add(encode);
         }
-        configRepository.setConfig(configType,JSONObject.toJSONString(list));
+        return JSONObject.toJSONString(list);
     }
 }

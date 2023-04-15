@@ -9,6 +9,8 @@ import org.slf4j.LoggerFactory;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import javafx.application.Platform;
 import javafx.fxml.FXML;
@@ -29,12 +31,32 @@ public class Controller extends AbstractTabController {
     @FXML
     public TabPane tabPanel;
     private static Controller instance = null;
-
+    static Pattern logPatter = Pattern.compile("\\{}");
     private SimpleDateFormat timeDataFormat;
     public static void logAndPrint(String... args) {
+        if (args.length > 0) {
+            String first = args[0];
+            if (first.contains("{}")) {
+                args = new String[]{replaceAsLog(first,args)};
+            }
+        }
         logger.debug("logAndPrint args:{}", (Object) args);
         log(args);
     }
+    
+    private static String replaceAsLog(String first, String[] args) {
+        final Matcher matcher = logPatter.matcher(first);
+        int index = 1;
+        StringBuffer sb = new StringBuffer();
+        while (args.length > index && matcher.find())
+        {
+            matcher.appendReplacement(sb,args[index]);
+            index++;
+        }
+        matcher.appendTail(sb);
+        return sb.toString();
+    }
+    
     public static void log(String... args) {
         if (!Toolkit.getToolkit().isFxUserThread()) {
             Platform.runLater(() -> showLogInFxThread(args));

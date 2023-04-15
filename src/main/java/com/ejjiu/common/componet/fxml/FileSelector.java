@@ -55,6 +55,7 @@ public class FileSelector extends AbstractInputComponent implements AutowireInte
         
         this.setConfigType(configType);
         this.setLabel(label);
+        this.isFolder = folder;
     }
 
     public boolean isFolder() {
@@ -68,7 +69,9 @@ public class FileSelector extends AbstractInputComponent implements AutowireInte
     @FXML
     public void setConfigType(ConfigType configType) {
         this.configType = configType;
-
+        if (configType == null) {
+            return;
+        }
         String config = configRepository.getConfig(configType);
         if (StringUtils.isNotEmpty(config)) {
             textField.setText(config);
@@ -97,7 +100,9 @@ public class FileSelector extends AbstractInputComponent implements AutowireInte
     }
     public void setPathWithSave(String path) {
         setPath(path);
-        configRepository.setConfig(configType.name(), path);
+        if (configType!=null) {
+            configRepository.setConfig(configType.name(), path);
+        }
     }
 
     public boolean isExistsDirectory() {
@@ -136,7 +141,7 @@ public class FileSelector extends AbstractInputComponent implements AutowireInte
     private void onSelectFile() {
         if (isFolder) {
             DirectoryChooser directoryChooser = new DirectoryChooser();
-
+            directoryChooser.setTitle("请选择");
             File oldFile = new File(getPath());
             if (oldFile.exists()) {
                 if (!oldFile.isDirectory()) {
@@ -147,8 +152,9 @@ public class FileSelector extends AbstractInputComponent implements AutowireInte
             file = directoryChooser.showDialog(textField.getScene().getWindow());
         } else {
             FileChooser fileChooser = new FileChooser();
+            fileChooser.setTitle("请选择");
             if (StringUtils.isNotEmpty(extendStr)) {
-                fileChooser.setSelectedExtensionFilter(new ExtensionFilter("请选择(" +extendStr + ")",extendStr.split(",")));
+                fileChooser.getExtensionFilters().add(new ExtensionFilter("请选择(" +extendStr + ")",extendStr.split(",")));
             }
             File oldFile = new File(getPath());
             if (oldFile.exists()) {
@@ -163,13 +169,17 @@ public class FileSelector extends AbstractInputComponent implements AutowireInte
 
         if (file != null) {
             textField.setText(getFile().getPath());
-            configRepository.setConfig(configType.name(), getFile().getPath());
+            if (configType!=null) {
+                configRepository.setConfig(configType.name(), getFile().getPath());
+            }
         }
     }
 
     @Override
     protected void onTextChange(String oldValue, String newValue) {
-        configRepository.setConfig(configType.name(), newValue);
+        if (configType!=null) {
+            configRepository.setConfig(configType.name(), newValue);
+        }
         file = null;
     }
 
