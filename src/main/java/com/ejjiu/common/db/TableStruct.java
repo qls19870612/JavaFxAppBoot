@@ -1,6 +1,6 @@
 package com.ejjiu.common.db;
 
-import com.ejjiu.common.utils.StringUtils;
+import com.ejjiu.utils.StringUtils;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

@@ -4,8 +4,8 @@ import com.ejjiu.common.enums.ConfigType;
 import com.ejjiu.common.interfaces.AutowireInterface;
 import com.ejjiu.common.jpa.ConfigRepository;
 import com.ejjiu.common.jpa.table.Config;
-import com.ejjiu.common.utils.StringUtils;
 
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import javafx.beans.value.ChangeListener;

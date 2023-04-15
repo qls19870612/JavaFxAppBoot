@@ -5,7 +5,7 @@ import com.ejjiu.common.controllers.Controller;
 import com.ejjiu.common.startLoader.Constant;
 import com.ejjiu.common.startLoader.PropertyReaderHelper;
 import com.ejjiu.common.startLoader.SplashScreen;
-import com.ejjiu.common.utils.LogCustom;
+import com.ejjiu.utils.LogCustom;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

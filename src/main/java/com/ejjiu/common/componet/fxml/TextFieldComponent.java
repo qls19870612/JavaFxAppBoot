@@ -4,7 +4,7 @@ package com.ejjiu.common.componet.fxml;
 import com.ejjiu.common.enums.ConfigType;
 import com.ejjiu.common.interfaces.AutowireInterface;
 import com.ejjiu.common.jpa.ConfigRepository;
-import com.ejjiu.common.utils.StringUtils;
+import com.ejjiu.utils.StringUtils;
 
 import org.springframework.beans.factory.annotation.Autowired;
 

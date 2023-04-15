@@ -2,7 +2,7 @@ package com.ejjiu.common.jpa;
 
 import com.ejjiu.common.enums.ConfigType;
 import com.ejjiu.common.jpa.table.Config;
-import com.ejjiu.common.utils.Utils;
+import com.ejjiu.utils.Utils;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

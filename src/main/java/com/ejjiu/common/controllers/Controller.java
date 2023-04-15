@@ -1,7 +1,7 @@
 package com.ejjiu.common.controllers;
 
 import com.ejjiu.common.enums.ConfigType;
-import com.ejjiu.common.utils.Utils;
+import com.ejjiu.utils.Utils;
 import com.sun.javafx.tk.Toolkit;
 
 import org.slf4j.Logger;

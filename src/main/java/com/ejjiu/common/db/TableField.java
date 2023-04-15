@@ -1,6 +1,6 @@
 package com.ejjiu.common.db;
 
-import com.ejjiu.common.utils.StringUtils;
+import com.ejjiu.utils.StringUtils;
 
 import java.util.Objects;
 import java.util.concurrent.atomic.AtomicInteger;

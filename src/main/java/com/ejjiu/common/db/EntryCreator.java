@@ -4,7 +4,7 @@ import com.ejjiu.common.controllers.Controller;
 import com.ejjiu.common.db.mysql.MysqlDialectProvider;
 import com.ejjiu.common.db.sqlite.SqlLiteDialectProvider;
 import com.ejjiu.common.file.FileOperator;
-import com.ejjiu.common.utils.TimeUtils;
+import com.ejjiu.utils.TimeUtils;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

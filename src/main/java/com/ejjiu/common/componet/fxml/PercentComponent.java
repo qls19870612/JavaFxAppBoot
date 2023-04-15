@@ -4,9 +4,9 @@ import com.ejjiu.common.enums.ConfigType;
 import com.ejjiu.common.interfaces.AutowireInterface;
 import com.ejjiu.common.jpa.ConfigRepository;
 import com.ejjiu.common.jpa.table.Config;
-import com.ejjiu.common.utils.IconUtils;
-import com.ejjiu.common.utils.StringUtils;
-import com.ejjiu.common.utils.Utils;
+import com.ejjiu.utils.IconUtils;
+import com.ejjiu.utils.StringUtils;
+import com.ejjiu.utils.Utils;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
