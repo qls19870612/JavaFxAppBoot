@@ -484,7 +484,6 @@ public class TimeDataAs implements ITimeData {
 
         return null;
     }
-
     private CurrentTimeParam getPrevTimeWithDate(CurrentTimeParam param)
 
     {
