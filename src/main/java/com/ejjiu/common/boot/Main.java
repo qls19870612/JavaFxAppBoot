@@ -23,7 +23,6 @@ import java.util.function.Consumer;
 import java.util.function.Supplier;
 
 import javafx.application.Application;
-import javafx.application.HostServices;
 import javafx.application.Platform;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
@@ -51,7 +50,7 @@ public class Main extends Application {
     private final CompletableFuture<Runnable> splashIsShowing;
     
     public static String[] savedArgs = new String[0];
-    public static HostServices hostServices;
+ 
     
     public static Stage getPrimaryStage() {
         return primaryStage;
@@ -138,7 +137,6 @@ public class Main extends Application {
         }).thenAcceptBothAsync(splashIsShowing, (ctx, closeSplash) -> {
             Platform.runLater(closeSplash);
         });
-        hostServices = getHostServices();
     }
     
     private void initConfig() {

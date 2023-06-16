@@ -30,7 +30,8 @@ public class StringUtils extends org.apache.commons.lang3.StringUtils {
     private static Pattern UPPERCASE = Pattern.compile("[A-Z]+");
     private static Pattern multiComment = Pattern.compile("/\\*[\\s\\S]*?\\*/");
     //    private static Pattern singleComment = Pattern.compile("^\\s*//[\\s\\S]*\\n");
-    private static Pattern singleComment = Pattern.compile("\\s*//.*\\n", Pattern.MULTILINE | Pattern.UNIX_LINES);
+    private static Pattern singleComment = Pattern.compile("\\s*//.*\\n*", Pattern.MULTILINE | Pattern.UNIX_LINES);
+    private static Pattern singleCommentWithoutNextLine = Pattern.compile("\\s*//.*", Pattern.MULTILINE | Pattern.UNIX_LINES);
     private static final Logger logger = LoggerFactory.getLogger(StringUtils.class);
     
     
@@ -318,19 +319,23 @@ public class StringUtils extends org.apache.commons.lang3.StringUtils {
         }
         return stringBuilder.toString();
     }
-    
     public static String removeComment(String s) {
+        return removeComment(s,true);
+    }
+    public static String removeComment(String s,boolean withNextLine) {
         s = removeMultiComment(s);
         
-        return removeSingleComment(s);
+        return removeSingleComment(s,withNextLine);
     }
-    
     public static String removeSingleComment(String s) {
+        return removeSingleComment(s,true);
+    }
+    public static String removeSingleComment(String s,boolean withNextLine) {
         StringBuffer sb;
         Matcher matcher1 = singleComment.matcher(s);
         sb = new StringBuffer();
         while (matcher1.find()) {
-            matcher1.appendReplacement(sb, "\n");
+            matcher1.appendReplacement(sb, withNextLine?"\n":"");
         }
         matcher1.appendTail(sb);
         return sb.toString();
