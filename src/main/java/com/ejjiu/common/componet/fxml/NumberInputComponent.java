@@ -2,6 +2,8 @@ package com.ejjiu.common.componet.fxml;
 
 import org.apache.commons.lang3.StringUtils;
 
+import javafx.scene.control.TextFormatter;
+
 /**
  *
  * 创建人  liangsong
@@ -17,7 +19,13 @@ public class NumberInputComponent extends InputComponent {
 //        label.setMinHeight(Region.USE_PREF_SIZE);
 //        label.setPrefWidth(30);
 //        label.setPrefWidth(Region.USE_PREF_SIZE);
-
+        textField.setTextFormatter(new TextFormatter<>(change -> {
+            final String controlNewText = change.getControlNewText();
+            if (StringUtils.isEmpty(controlNewText) || controlNewText.matches("\\d+")) {
+                return change;
+            }
+            return null;
+        }));
     }
 
     @Override
