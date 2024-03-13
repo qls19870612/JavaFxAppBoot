@@ -1,5 +1,8 @@
 package com.ejjiu.common.componet.fxml;
 
+import com.google.common.collect.Lists;
+
+import com.ejjiu.common.componet.render.EnumRender;
 import com.ejjiu.common.enums.ConfigType;
 import com.ejjiu.common.interfaces.AutowireInterface;
 import com.ejjiu.common.jpa.ConfigRepository;
@@ -9,8 +12,12 @@ import org.springframework.beans.factory.annotation.Autowired;
 
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
+import javafx.collections.FXCollections;
 import javafx.fxml.FXML;
 import javafx.scene.control.ComboBox;
+import javafx.scene.control.ListCell;
+import javafx.scene.paint.Color;
+import javafx.scene.paint.Paint;
 
 
 /**
@@ -22,6 +29,11 @@ public class ComboboxComponent<T> extends ComboBox<T> implements AutowireInterfa
     private ConfigType configType;
     @Autowired
     private ConfigRepository configRepository;
+    
+   
+    
+    private Class<T> enumClass;
+    
     public ComboboxComponent() {
         super();
         this.getSelectionModel().selectedIndexProperty().addListener(this);
@@ -36,6 +48,20 @@ public class ComboboxComponent<T> extends ComboBox<T> implements AutowireInterfa
         int config = configRepository.getInt(configType);
         this.getSelectionModel().select(config);
 
+    }
+    public Class<T> getEnumClass() {
+        return enumClass;
+    }
+    @FXML
+    public void setEnumClass(Class<T> enumClass)
+    {
+        this.enumClass = enumClass;
+        if (enumClass!=null) {
+            this.setCellFactory(param ->  new EnumRender());
+            final T[] enumConstants = (T[])enumClass.getEnumConstants();
+            this.setItems(FXCollections.observableList(Lists.newArrayList(enumConstants)));
+            this.setButtonCell(new EnumRender(Color.BLACK));
+        }
     }
     @FXML
     public void initConfigIfNoValue(ConfigType configType) {
@@ -61,5 +87,6 @@ public class ComboboxComponent<T> extends ComboBox<T> implements AutowireInterfa
             return;
         }
         configRepository.setInt(configType,newValue.intValue());
+        this.layout();
     }
 }
