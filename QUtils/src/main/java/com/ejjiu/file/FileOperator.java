@@ -29,8 +29,8 @@ public class FileOperator {
     public static final String NEXT_LINE = System.getProperty("line.separator");
     public static final String LINUX_NEXT_LINE = "\n";
     public static final String WIN_NEXT_LINE = "\r\n";
-
-
+    
+    
     public static void openFile(String path) {
         try {
             path = findExistPath(path);
@@ -39,10 +39,10 @@ public class FileOperator {
             e.printStackTrace();
         }
     }
-
+    
     private static String findExistPath(String path) {
         File file = new File(path);
-
+        
         while (file != null) {
             if (file.exists()) {
                 return file.getAbsolutePath();
@@ -51,23 +51,34 @@ public class FileOperator {
         }
         return path;
     }
-
+    
     public static void openFileAndSelect(String path) {
         try {
             String existPath = findExistPath(path);
-            if (path.equals(existPath)) {
-    
-                Runtime.getRuntime().exec("C:/Windows/explorer.exe /select," + existPath);
+   
+            String os = System.getProperty("os.name").toLowerCase();
+            String command = "";
+            
+            if (os.contains("win")) {
+                // Windows系统，使用explorer命令
+                command = "explorer /select,";
+            } else if (os.contains("mac") || os.contains("nix") || os.contains("nux")) {
+                // Mac或Linux系统，使用open命令
+                command = "open ";
+            } else {
+                return;
             }
-            else
-            {
-                Runtime.getRuntime().exec("C:/Windows/explorer.exe " + existPath);
-            }
+            existPath = existPath.replace("/",File.separator);
+            existPath = existPath.replace("\\",File.separator);
+            
+            String openPath = command + existPath;
+            Runtime.getRuntime().exec(openPath);
+            
         } catch (IOException e) {
             e.printStackTrace();
         }
     }
-
+    
     /**
      * 读取控制台打印的文字
      * @param in
@@ -93,14 +104,14 @@ public class FileOperator {
         }
         return sb.toString();
     }
-
+    
     public static String runBat(String batStr) throws IOException {
         Process exec = Runtime.getRuntime().exec(batStr);
         //        exec.waitFor();
         String info = readInputstream(exec.getInputStream());
-
+        
         String error = readInputstream(exec.getErrorStream());
-
+        
         String ret = "";
         if (StringUtils.isNotEmpty(info)) {
             ret += "info:" + info;
@@ -111,6 +122,7 @@ public class FileOperator {
         exec.destroy();
         return ret;
     }
+    
     public static boolean isImage(File entry) {
         return isPng(entry) || isJpg(entry);
     }
@@ -134,10 +146,10 @@ public class FileOperator {
             url = "/" + url;
         }
         try {
-
+            
             InputStream resourceAsStream = FileOperator.class.getResourceAsStream(url);
             BufferedReader br = new BufferedReader(new InputStreamReader(resourceAsStream));
-
+            
             String s1 = "";
             while ((s1 = br.readLine()) != null) {
                 if (stringBuilder.length() > 0) {
@@ -148,10 +160,10 @@ public class FileOperator {
         } catch (Exception e) {
             logger.error("not found file =========== getResourceAsText url:{}", url);
         }
-
+        
         return stringBuilder.toString();
     }
-
+    
     /**
      * 先从外部配置文件读取，如果读不到，再从打包的配置文件读取默认配置
      * @param configUrl
@@ -165,17 +177,18 @@ public class FileOperator {
         }
         return s;
     }
-    public static String[] getFileLines(String url)
-    {
+    
+    public static String[] getFileLines(String url) {
         String config = getConfig(url);
         String s = config.replaceAll("\r", "");
         return s.split("\n");
     }
+    
     public static String getConfig(String url) {
-
+        
         return getConfig(url, url);
     }
-
+    
     public static interface Filter<T> {
         /**
          * Decides if the given directory entry should be accepted or filtered.
@@ -188,48 +201,49 @@ public class FileOperator {
          */
         boolean accept(T entry);
     }
-
-
+    
+    
     public static ArrayList<File> getAllFiles(String root, String extName) {
         File file = new File(root);
         return getAllFiles(file, extName);
     }
-
+    
     public static ArrayList<File> getAllFiles(File root, String extName) {
         ArrayList<File> ret = new ArrayList<File>();
         readToList(root, ret, extName);
-
+        
         return ret;
     }
-
+    
     public static ArrayList<File> getAllFiles(String root, Filter<File> filter) {
         File file = new File(root);
         return getAllFiles(file, filter);
     }
-
-
+    
+    
     public static ArrayList<File> getAllFilesIgnoreBranch(File root, Filter<File> filter) {
-        return getAllFiles(root,filter, entry -> !isBranchPath(entry.getName()));
+        return getAllFiles(root, filter, entry -> !isBranchPath(entry.getName()));
     }
+    
     public static ArrayList<File> getAllFiles(File root, Filter<File> filter) {
         ArrayList<File> ret = new ArrayList<File>();
         readToList(root, ret, filter, (Filter<File>) null);
         return ret;
     }
-
+    
     public static ArrayList<File> getAllFiles(File root, Filter<File> filter, Filter<File> dirFilter) {
         ArrayList<File> ret = new ArrayList<File>();
         readToList(root, ret, filter, dirFilter);
         return ret;
     }
-
+    
     public static String readFiles(String path) {
         File file = new File(path);
         return readFiles(file);
     }
-
+    
     public static String readFiles(File file) {
-
+        
         String result = null;
         try {
             String code = get_charset(file);
@@ -242,16 +256,16 @@ public class FileOperator {
             } else {
                 return readFiles(file, code);
             }
-
+            
         } catch (IOException e) {
             e.printStackTrace();
         }
         return result;
-
+        
     }
-
+    
     private static String readFiles(File file, String code) {
-
+        
         String ret = null;
         BufferedReader reader = null;
         StringBuffer stringBuffer = null;
@@ -266,7 +280,7 @@ public class FileOperator {
             while ((tempStr = reader.readLine()) != null) {
                 stringBuffer.append(tempStr).append(NEXT_LINE);
             }
-
+            
         } catch (IOException e) {
             //            System.out.println(e.getMessage());
         } finally {
@@ -291,12 +305,12 @@ public class FileOperator {
                 ret = ret.substring(0, lastIndex);
             }
         }
-
-
+        
+        
         return ret;
     }
- 
-
+    
+    
     public static boolean writeFile(File file, byte[] content) {
         try {
             Files.write(file.toPath(), content);
@@ -306,10 +320,11 @@ public class FileOperator {
         }
         return true;
     }
-
+    
     public static boolean writeFile(String fileUrl, String content) {
-        return writeFile(new File(fileUrl),content);
+        return writeFile(new File(fileUrl), content);
     }
+    
     public static boolean writeFile(File file, String content) {
         File parentFile = file.getParentFile();
         if (!parentFile.exists()) {
@@ -343,10 +358,10 @@ public class FileOperator {
                 e.printStackTrace();
             }
         }
-
+        
         return ret;
     }
-
+    
     public static void readToList(File root, ArrayList<File> ret, String extName) {
         if (root.isDirectory()) {
             File[] subFiles = root.listFiles();
@@ -361,7 +376,7 @@ public class FileOperator {
             }
         }
     }
-
+    
     public static void readToList(File root, ArrayList<File> ret, Filter<File> filter, Filter<File> dirFilter) {
         if (root.isDirectory()) {
             if (dirFilter != null) {
@@ -381,7 +396,7 @@ public class FileOperator {
             }
         }
     }
-
+    
     public static void traverseFiles(File root, Filter<File> filter) {
         if (filter.accept(root)) {
             if (root.isDirectory()) {
@@ -394,9 +409,11 @@ public class FileOperator {
             }
         }
     }
+    
     public static boolean isBranchPath(String absolutePath) {
         return absolutePath.endsWith(".git") || absolutePath.endsWith(".svn");
     }
+    
     public static boolean hasEnableFile(File root, Filter<File> filter) {
         boolean accept = filter.accept(root);
         if (accept) {
@@ -415,10 +432,11 @@ public class FileOperator {
         }
         return false;
     }
+    
     public static boolean deleteDir(File dir) {
         if (dir.isDirectory()) {
             String[] children = dir.list();
-            for (int i=0; i<children.length; i++) {
+            for (int i = 0; i < children.length; i++) {
                 boolean success = deleteDir(new File(dir, children[i]));
                 if (!success) {
                     return false;
@@ -428,6 +446,7 @@ public class FileOperator {
         // 目录此时为空，可以删除
         return dir.delete();
     }
+    
     public static String getExtensionName(String filename) {
         if ((filename != null) && (filename.length() > 0)) {
             int dot = filename.lastIndexOf('.');
@@ -437,7 +456,7 @@ public class FileOperator {
         }
         return filename;
     }
-
+    
     public static String getFileNameNoEx(String filename) {
         if ((filename != null) && (filename.length() > 0)) {
             int dot = filename.lastIndexOf('.');
@@ -447,7 +466,7 @@ public class FileOperator {
         }
         return filename;
     }
-
+    
     public static String get_charset(File file) {
         String charset = "GBK";
         byte[] first3Bytes = new byte[3];//首先3个字节
@@ -474,7 +493,7 @@ public class FileOperator {
             if (!checked) {
                 // int len = 0;
                 int loc = 0;
-
+                
                 while ((read = bis.read()) != -1) {
                     loc++;
                     if (read >= 0xF0) {
@@ -509,18 +528,18 @@ public class FileOperator {
                         }
                     }
                 }
-
+                
             }
-
+            
             bis.close();
         } catch (Exception e) {
             //            e.printStackTrace();
             //            System.out.println("get_charset:" + e.getMessage());
         }
-
+        
         return charset;
     }
-
+    
     public static void turnUTF8withoutBOM(File file, File targetFile) throws IOException {
         if (!targetFile.exists()) {
             targetFile.createNewFile();
@@ -545,7 +564,7 @@ public class FileOperator {
         br.close();
         bw.close();
     }
-
+    
     public static String getFileExtName(File file) {
         int beginIndex = file.getName().lastIndexOf(".");
         if (beginIndex == -1) {
