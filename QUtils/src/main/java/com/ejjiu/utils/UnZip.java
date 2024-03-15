@@ -62,8 +62,11 @@ public class UnZip {
                 File newFile = new File(destDir + File.separator + fileName);
                 //System.out.println("Unzipping to " + newFile.getAbsolutePath());
                 // create directories for sub directories in zip
-                
+           
                 if (!ze.isDirectory()) {
+                    if (!newFile.getParentFile().exists()) {
+                        newFile.getParentFile().mkdirs();
+                    }
                     FileOutputStream fos = new FileOutputStream(newFile);
                     int len;
                     while ((len = zis.read(buffer)) > 0) {

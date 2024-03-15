@@ -17,6 +17,7 @@ import javafx.fxml.FXML;
 import javafx.scene.control.Label;
 import javafx.scene.control.TabPane;
 import javafx.scene.control.Tooltip;
+import javafx.scene.layout.AnchorPane;
 
 public class Controller extends AbstractTabController {
     private static final Logger logger = LoggerFactory.getLogger(Controller.class);
@@ -30,6 +31,13 @@ public class Controller extends AbstractTabController {
     public Label infoLabel;
     @FXML
     public TabPane tabPanel;
+    @FXML
+    public AnchorPane rootPanel;
+    
+    public static Controller getInstance() {
+        return instance;
+    }
+    
     private static Controller instance = null;
     static Pattern logPatter = Pattern.compile("\\{}");
     private SimpleDateFormat timeDataFormat;
@@ -101,11 +109,12 @@ public class Controller extends AbstractTabController {
 
     @Override
     public void setup() {
+        instance = this;
         super.setup();
         setup(tabPanel, ConfigType.TAB_SELECT_INDEX);
 
         timeDataFormat = new SimpleDateFormat("HH:mm:ss");
-        instance = this;
+     
 
         infoLabel.setText("");
         timeLabel.setText("");
